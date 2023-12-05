@@ -1,0 +1,115 @@
+Bubble Sort
+
+
+#include<sys/types.h>
+#include<unistd.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#include<sys/wait.h>
+void BubbleSort(int arr[],int n){
+int swapped = 0;
+int temp;
+for(int i=0; i<n-1; i++ )
+{
+for(int j=0;j<(n-i-1);j++)
+{
+if(arr[j]>arr[j+1])
+{
+temp=arr[j];
+arr[j]=arr[j+1];
+arr[j+1]=temp;
+}
+}
+}
+printf("\nSorted array is:");
+for(int i=0;i<n;i++)
+{
+printf("%d ",arr[i]);
+}
+}
+int main()
+{
+pid_t id=0,cid=0,pid=0,ppid=0;
+int i;
+char *arg[20],str[20];
+int n;
+printf("Enter size of array:");
+scanf("%d",&n);
+int arr[n];
+for( i=0;i<n;i++)
+{
+printf("Enter element %d :",i+1);
+scanf("%d",&arr[i]);
+}
+BubbleSort(arr,n); 
+id = fork();
+if(id==0)
+{
+cid=getpid();
+printf("\nChild process id : %d",cid);
+ppid=getppid();
+printf("\nParent process id : %d",ppid);
+for(i=0;i<n;i++)
+{
+sprintf(str,"%d",arr[i]);
+arg[i]=malloc(sizeof(str));
+strcpy(arg[i],str);
+}
+arg[i]=NULL;
+execve("./b_search.out",arg,NULL);
+exit(0);
+}
+else
+{
+pid = getppid();
+wait(NULL);
+printf("This is parent %d\n",pid);
+}
+return 0;
+}
+
+
+
+
+
+Binary Search
+
+
+//Binary Search
+#include<sys/types.h>
+#include<unistd.h>
+#include<stdio.h>
+#include<ctype.h> 
+#include<stdlib.h>
+int BinarySearch(int a[],int target, int start, int end)
+{
+while(start<=end)
+{
+int mid = start + (end-start)/2;
+if(target<a[mid])
+end = mid-1;
+else if (target>a[mid])
+start = mid+1;
+else
+return mid;
+}
+return -1;
+}
+int main(int argc,char **argv)
+{
+int n=0,i=0,pos,target=0;
+int a[10];
+printf("Enter target element to search: ");
+scanf("%d",&target);
+for(i=0;i<argc;i++){
+a[i]=atoi(argv[i]);
+printf("%d ",a[i]);
+}
+pos = BinarySearch(a,target,0,argc-1);
+if(pos==-1)
+printf("\nElement not found\n");
+else
+printf("\nElement found at position : %d\n",pos);
+return 0;
+}
