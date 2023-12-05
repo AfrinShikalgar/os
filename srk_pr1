@@ -1,0 +1,65 @@
+echo "Address Book Creation"
+while [ 1 ] 
+do
+echo "1.for creation 2.for display 3.for searching 4.for deletion 5.for Report Generation 6.exit"
+read choice
+case $choice in
+1) echo "Enter id"
+   read id
+   echo "Enter Name"
+   read name
+   echo "Enter mobile number"
+   read mno
+   m=${#mno}
+   if [ $m != 10 ]
+   then
+   echo "Enter Valid mobile no"
+   read mno
+   fi
+   echo "Enter email"
+   read email
+   echo "Enter address"
+   read address
+   echo "Enter Landmark"
+   read landmark
+   echo "Enter City"
+   read city
+   echo "Enter State"
+   read state
+   echo "Enter Pincode"
+   read pincode
+   echo "$id $name $email $address $landmark $city $state $pincode">>sample.lst
+   ;;
+2) cat "sample.lst"
+   ;;
+3) echo "Enter pattern to search"
+   read p
+   grep -i "$p" sample.lst
+   ;;
+4) echo "Enter Pattern to delete"
+   read p
+   grep -v -i "$p" sample.lst>>temp1.lst
+   cp temp1.lst sample.lst
+   ;;
+5) awk -f sample.awk sample.lst
+   ;;
+6) exit
+   ;;
+
+*) echo "Enter valid choice"
+   ;;
+esac
+done
+
+sample.awk
+
+BEGIN{
+printf "Report Generation of Address Book\n"
+getline city<"-"
+}
+$6==city{
+print 
+}
+END{
+
+}
